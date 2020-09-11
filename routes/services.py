@@ -41,7 +41,12 @@ def api_services():
                 raise ApiException(e.__dict__.get("message"), status_code=400)
 
     elif request.method == 'PUT':
-        pass
+        data = request.get_json()
+        try:
+            db.update_service(args.get("name"), data)
+        except Exception as e:
+            raise ApiException(e.__dict__.get("message"), status_code=400)
+
     elif request.method == "DELETE":
         data = request.get_json()
         if not data:
