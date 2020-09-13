@@ -1,0 +1,10 @@
+{
+    "prod": {
+        "app_function": "app.app",
+        "aws_region": "us-east-1",
+        "profile_name": "default",
+        "project_name": "st-joseph-backe",
+        "runtime": "python3.8",
+        "s3_bucket": "st-joseph-services"
+    }
+}
