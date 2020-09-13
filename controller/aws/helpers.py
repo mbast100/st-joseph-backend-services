@@ -39,7 +39,7 @@ def validate_regular_service(service):
 
 
 def valid_seasonal_services(service):
-    required_entries = ('title', 'display', 'services',"name")
+    required_entries = ('title', 'display', 'services',"name", "month")
     if valid_entries(required_entries,service):
         services = service['services']
         if len(services) == 0:

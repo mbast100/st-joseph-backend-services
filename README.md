@@ -1,4 +1,8 @@
 # st-joseph-backend-services
 
-visit: [st-joseph-church](https://www.stjosephchurch.ca)
+#### visit: [stjosephchurch.ca](https://www.stjosephchurch.ca)
+
+## AWS
+
+- setup [aws-cli](https://docs.aws.amazon.com/cli/latest/userguide/install-macos.html)
 

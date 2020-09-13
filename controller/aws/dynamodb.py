@@ -31,6 +31,7 @@ class DynamoDb():
             except ClientError:
                 print(ClientError.__dict__())
                 raise ApiException("oops", 400)
+
     def get_all_items(self):
         self.response = self.table.scan()
 
@@ -52,6 +53,14 @@ class DynamoDb():
 
     def delete(self, name):
         self.response = self.table.delete_item(Key={"name": name})
+
+    def service_exists(self, name):
+        self.get_item_by_name(name)
+        print(self.response)
+        if self.item == "item not found":
+            return False
+        else:
+            return True
 
     @property
     def status_code(self):

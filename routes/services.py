@@ -21,31 +21,34 @@ def api_services():
             if len(db.items) == 0:
                 return jsonify({"message":"no items found for type: '{}'".format(args.get("type"))}), 404
             return jsonify(db.items), 200
+        else:
+            db.get_all_items()
+            return jsonify(db.items), 200
 
     elif request.method == "POST":
         data = request.get_json()
-        if args.get("type") == "seasonal":
-            try:
+        if db.service_exists(data["name"]):
+            return jsonify({"message":"duplicate service name"}), 400
+        try:
+            if args.get("type") == "seasonal":
                 db.create_seasonal_service(data)
-                if db.status_code == 200:
-                    return jsonify({"message":"Service created"}), 201
-            except Exception as e:
-                raise ApiException(e.__dict__.get("message"), status_code=400)
-        if args.get("type") == "regular":
-            try:
+            elif args.get("type") == "regular":
                 db.create_regular_service(data)
-                print(db.response)
-                if db.status_code == 200:
-                    return jsonify({"message": "Service created"}), 201
-            except Exception as e:
-                raise ApiException(e.__dict__.get("message"), status_code=400)
+
+            if db.status_code == 200:
+                return jsonify({"message": "Service created"}), 201
+        except Exception as e:
+            raise ApiException(e.__dict__.get("message"), status_code=400)
 
     elif request.method == 'PUT':
         data = request.get_json()
-        try:
-            db.update_service(args.get("name"), data)
-        except Exception as e:
-            raise ApiException(e.__dict__.get("message"), status_code=400)
+        if db.service_exists(args.get("name")):
+            try:
+                db.update_service(args.get("name"), data)
+                return jsonify({"message":"updated {}".format(args.get("name"))}), 200
+            except Exception as e:
+                raise ApiException(e.__dict__.get("message"), status_code=400)
+        return jsonify({"message":"no service found with the following name: {}".format(args.get("name"))}), 404
 
     elif request.method == "DELETE":
         data = request.get_json()
