@@ -1,5 +1,5 @@
 from app import app
-from flask import request, jsonify
+from flask import request, jsonify, make_response
 from api_exception import ApiException
 from controller.aws.dynamodb import DynamoDb
 
@@ -23,7 +23,11 @@ def api_services():
             return jsonify(db.items), 200
         else:
             db.get_all_items()
-            return jsonify(db.items), 200
+            response = make_response(jsonify(db.items), 200)
+            response.headers["Content-Range"] = len(db.items)
+            response.headers['Access-Control-Expose-Headers'] = 'Content-Range'
+            return response
+            
 
     elif request.method == "POST":
         data = request.get_json()

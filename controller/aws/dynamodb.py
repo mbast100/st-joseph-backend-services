@@ -38,6 +38,9 @@ class DynamoDb():
     def get_item_by_name(self, name):
         self.response = self.table.get_item(Key={'name': name})
 
+    def get_item_by_email(self, email):
+        self.response = self.table.get_item(Key={'email': email})
+
     def get_items_by_type(self, type):
         self.response = self.table.scan(FilterExpression=Attr('type').eq(type))
 
@@ -57,6 +60,13 @@ class DynamoDb():
     def service_exists(self, name):
         self.get_item_by_name(name)
         print(self.response)
+        if self.item == "item not found":
+            return False
+        else:
+            return True
+
+    def user_exists(self, email):
+        self.get_item_by_email(email)
         if self.item == "item not found":
             return False
         else:
