@@ -1,6 +1,6 @@
 import boto3
 from controller.aws.helpers import *
-from controller.aws.validation import *
+from controller.aws.helpers import *
 from boto3.dynamodb.conditions import Key
 
 dynamodb = boto3.resource('dynamodb')
