@@ -29,6 +29,7 @@ class S3Bucket():
 
             return contents
         except Exception as e:
+            print(e)
             print(e.__dict__)
             self.message == e.__dict__.get("message")
             self.response = e.__dict__.get("response")
