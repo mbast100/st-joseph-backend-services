@@ -21,6 +21,13 @@ def api_services():
             if len(db.items) == 0:
                 return jsonify({"message":"no items found for type: '{}'".format(args.get("type"))}), 404
             return jsonify(db.items), 200
+
+        elif args.get("month"):
+            db.get_items_by_month(args.get("month"))
+            if len(db.items) == 0:
+                return jsonify({"message":"no items found for month: '{}'".format(args.get("month"))}), 404
+            return jsonify(db.items),200
+
         else:
             db.get_all_items()
             response = make_response(jsonify(db.items), 200)
@@ -31,6 +38,7 @@ def api_services():
 
     elif request.method == "POST":
         data = request.get_json()
+        print(data)
         if db.service_exists(data["name"]):
             return jsonify({"message":"duplicate service name"}), 400
         try:

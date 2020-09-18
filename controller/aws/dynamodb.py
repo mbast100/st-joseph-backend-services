@@ -38,6 +38,9 @@ class DynamoDb():
     def get_item_by_name(self, name):
         self.response = self.table.get_item(Key={'name': name})
 
+    def get_items_by_month(self,month):
+        self.response = self.table.scan(FilterExpression=Attr('month').eq(month))
+
     def get_item_by_email(self, email):
         self.response = self.table.get_item(Key={'email': email})
 
