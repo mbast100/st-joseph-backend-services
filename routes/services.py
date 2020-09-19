@@ -15,6 +15,7 @@ def handle_invalid_service(error):
 def api_services():
     args = request.args
     db = DynamoDb("services")
+    
     if request.method == 'GET':
         if args.get("type"):
             db.get_items_by_type(args.get("type"))

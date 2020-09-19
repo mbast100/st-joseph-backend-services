@@ -7,18 +7,23 @@ from api_exception import ApiException
 class S3Bucket():
     def __init__(self):
         self.s3_client = boto3.client('s3')
+        self.s3_resource = boto3.resource('s3')
         self.response = {}
         self.message ={}
 
-    def upload_file(self, file_name, bucket,object_name=None):
-        if object_name is None:
-            object_name = file_name
+    def upload_file(self,bucket, filename, file):
         try:
-            self.response = self.s3_client.upload_file(file_name, bucket, object_name)
-        except ClientError as e:
-            logging.error(e)
-            return False
-        return True
+            self.response = self.s3_resource.Bucket(bucket).put_object(Key=filename,Body=file)
+        except Exception as e:
+            print(e)
+            raise ApiException("something went wrong while uploading to s3 bucket", 400)
+    
+    def delete_file(self, bucket, key):
+        try:
+            self.response = self.s3_client.delete_object(Bucket = bucket, Key =key)
+        except Exception as e:
+            print(e)
+            raise ApiException("something went wrong while deleting o s3 bucket", 400)
 
     def list_files(self,bucket):
         try:

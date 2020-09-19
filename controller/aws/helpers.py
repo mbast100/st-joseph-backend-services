@@ -69,8 +69,7 @@ def valid_seasonal_services(service):
         return True
     else:
         raise ApiException(
-            "missing required field, please make sure the following fields are present: {}".format(
-                str(required_entries)),
+            "missing required field, please make sure the following fields are present: {}".format(str(required_entries)),
             status_code=400)
 
 def validate_email(email):

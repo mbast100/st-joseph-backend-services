@@ -48,9 +48,12 @@ class DynamoDb():
         self.response = self.table.scan(FilterExpression=Attr('type').eq(type))
 
     def create_seasonal_service(self, service):
-        valid_seasonal_services(service)
-        service.update({"type": "seasonal"})
-        self.create(service)
+        try:
+            valid_seasonal_services(service)
+            service.update({"type": "seasonal"})
+            self.create(service)
+        except Exception as e:
+            raise ApiException(e.__dict__.get("message"), 400)
 
     def create_regular_service(self, service):
         validate_regular_service(service)
@@ -92,3 +95,8 @@ class DynamoDb():
             return self.response["Item"]
         except KeyError:
             return "item not found"
+    
+    @property
+    def sorted_items(self):
+        if self.items != "items not found":
+            return sorted(self.items, lambda i: i["month"])
