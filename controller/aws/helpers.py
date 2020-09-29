@@ -12,12 +12,10 @@ def valid_service_time_and_date(items):
     if len(items) == 0:
         raise ApiException("invalid serviceTimeAndDate", status_code=400)
     for item in items:
-
         if "date" not in item.keys():
             raise ApiException("invalid serviceTimeAndDate missing 'date'", status_code=400)
         if "start" not in item.keys():
             raise ApiException("invalid serviceTimeAndDate missing 'start'", status_code=400)
-
     return True
 
 
@@ -43,12 +41,13 @@ def validate_user_profile(profile):
 def validate_regular_service(service):
     required_entries = ('displayName', 'serviceTimeAndDate',"name")
     if valid_entries(required_entries,service):
-        serviceTimeAndDate = service["serviceTimeAndDate"]
-        for item in serviceTimeAndDate:
-            try:
-                valid_service_time_and_date(service["serviceTimeAndDate"])
-            except Exception as e:
-                raise ApiException(e.__dict__.get("message"), status_code=400)
+        if len(service["serviceTimeAndDate"]) == 0:
+            raise ApiException("missing service time and date", 400)
+        try:
+            valid_service_time_and_date(service["serviceTimeAndDate"])
+        except Exception as e:
+            raise ApiException(e.__dict__.get("message"), status_code=400)
+        return True
     else:
         raise ApiException(
             "missing required field, please make sure the following fields are present: {}".format(str(required_entries)),

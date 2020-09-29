@@ -1,5 +1,6 @@
 argcomplete==1.12.0
 astroid==2.4.2
+attrs==20.2.0
 blinker==1.4
 boto3==1.14.54
 boto3-stubs==1.14.54.0
@@ -16,6 +17,7 @@ Flask-Mail==0.9.1
 future==0.18.2
 hjson==3.0.1
 idna==2.10
+iniconfig==1.0.1
 isort==5.5.2
 itsdangerous==1.1.0
 Jinja2==2.11.2
@@ -24,9 +26,14 @@ kappa==0.6.0
 lazy-object-proxy==1.4.3
 MarkupSafe==1.1.1
 mccabe==0.6.1
+packaging==20.4
 pip-tools==5.3.1
 placebo==0.9.0
+pluggy==0.13.1
+py==1.9.0
 pylint==2.6.0
+pyparsing==2.4.7
+pytest==6.1.0
 python-dateutil==2.6.1
 python-slugify==4.0.1
 PyYAML==5.3.1

@@ -35,17 +35,16 @@ def api_services():
             response.headers["Content-Range"] = len(db.items)
             response.headers['Access-Control-Expose-Headers'] = 'Content-Range'
             return response
-            
 
     elif request.method == "POST":
         data = request.get_json()
-        print(data)
         if db.service_exists(data["name"]):
             return jsonify({"message":"duplicate service name"}), 400
+
         try:
             if args.get("type") == "seasonal":
                 db.create_seasonal_service(data)
-            elif args.get("type") == "regular":
+            if args.get("type") == "regular":
                 db.create_regular_service(data)
 
             if db.status_code == 200:

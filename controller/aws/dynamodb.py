@@ -11,9 +11,13 @@ class DynamoDb():
         self.response = {}
 
     def create(self, item):
-        self.response = self.table.put_item(
-            Item=item
-        )
+        try:
+            self.response = self.table.put_item(
+                Item=item
+            )
+        except Exception as e:
+            print(e)
+            raise ApiException("oops something wrong while create the service", status_code=500)
 
     def update_service(self, name, updates):
         for update in updates.keys():
@@ -56,16 +60,18 @@ class DynamoDb():
             raise ApiException(e.__dict__.get("message"), 400)
 
     def create_regular_service(self, service):
-        validate_regular_service(service)
-        service.update({"type": "regular"})
-        self.create(service)
+        try:
+            validate_regular_service(service)
+            service.update({"type": "regular"})
+            self.create(service)
+        except Exception as e:
+            raise ApiException(e.__dict__.get("message"), 400)
 
     def delete(self, name):
         self.response = self.table.delete_item(Key={"name": name})
 
     def service_exists(self, name):
         self.get_item_by_name(name)
-        print(self.response)
         if self.item == "item not found":
             return False
         else:
