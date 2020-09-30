@@ -50,6 +50,10 @@ class DynamoDb():
 
     def get_items_by_type(self, type):
         self.response = self.table.scan(FilterExpression=Attr('type').eq(type))
+    
+    def get_items_by_type_and_month(self, type, month):
+        self.response = self.table.scan(
+            FilterExpression=Attr("type").eq(type) & Attr("month").eq(month))
 
     def create_seasonal_service(self, service):
         try:

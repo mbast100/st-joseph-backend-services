@@ -78,3 +78,12 @@ class TestProdServices():
         assert web.get_status_code == 201
         web.core("DELETE", data=json.dumps({"name": self.seasonal_service_data["name"]}))
         assert web.get_status_code == 200
+    
+    def test_get_services_by_month(self, prod_endpoint):
+        pass
+
+    def test_get_services_by_type(self, prod_endpoint):
+        pass
+
+    def test_get_services_by_type_and_month(self, prod_endpoint):
+        pass

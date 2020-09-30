@@ -18,7 +18,10 @@ def api_services():
     
     if request.method == 'GET':
         if args.get("type"):
-            db.get_items_by_type(args.get("type"))
+            if args.get("month"):
+                db.get_items_by_type_and_month(args.get("type"), args.get("month"))
+            else:
+                db.get_items_by_type(args.get("type"))
             if len(db.items) == 0:
                 return jsonify({"message":"no items found for type: '{}'".format(args.get("type"))}), 404
             return jsonify(db.items), 200
