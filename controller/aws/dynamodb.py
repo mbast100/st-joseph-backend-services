@@ -2,13 +2,14 @@ from app import dynamodb
 from botocore.exceptions import *
 from boto3.dynamodb.conditions import Key, Attr
 from controller.aws.helpers import *
-
+from datetime import date
 
 class DynamoDb():
     def __init__(self, table_name):
         self.table_name = table_name
         self.table = dynamodb.Table(table_name)
         self.response = {}
+        self.today = date.today()
 
     def create(self, item):
         try:
@@ -67,6 +68,15 @@ class DynamoDb():
         try:
             validate_regular_service(service)
             service.update({"type": "regular"})
+            self.create(service)
+        except Exception as e:
+            raise ApiException(e.__dict__.get("message"), 400)
+
+    def create_commemoration(self, service):
+        try:
+            valid_seasonal_services(service)
+            service.update({"type":"commemoration"})
+            service.update({"createdOn":self.today.strftime("%d/%m/%Y")})
             self.create(service)
         except Exception as e:
             raise ApiException(e.__dict__.get("message"), 400)

@@ -49,6 +49,8 @@ def api_services():
                 db.create_seasonal_service(data)
             if args.get("type") == "regular":
                 db.create_regular_service(data)
+            if args.get("type") == "commemoration":
+                db.create_commemoration(data)
 
             if db.status_code == 200:
                 return jsonify({"message": "Service created"}), 201
