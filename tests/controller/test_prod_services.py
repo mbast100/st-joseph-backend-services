@@ -9,6 +9,7 @@ class TestProdServices():
         "title": "Testing service creation",
         "display": True,
         "month": "january",
+        "displayName": "Testing",
         "services": [
             {
                 "name": "service test 1",

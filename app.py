@@ -10,6 +10,7 @@ dynamodb = boto3.resource('dynamodb')
 from routes.services import *
 from routes.test import *
 from routes.media import *
+from routes.internal_configurations import *
 
 
 if __name__ == '__main__':

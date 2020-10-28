@@ -36,6 +36,34 @@ class DynamoDb():
             except ClientError:
                 print(ClientError.__dict__())
                 raise ApiException("oops", 400)
+    
+    def update_internal_configuration(self, feature, updates):
+
+        for update in updates.keys():
+            try:
+                self.table.update_item(
+                    Key={
+                        'feature': feature
+                    },
+                    UpdateExpression="set {} = :r".format(update),
+                    ExpressionAttributeValues={
+                        ':r': updates[update],
+                    },
+                    ReturnValues="UPDATED_NEW"
+                )
+            except ClientError as error:
+                self.response = error.response
+                raise ApiException(self.response["Error"], 400)
+
+            except Exception as e:
+                print(e)
+                raise ApiException("oops", 500)
+
+    def get_internal_configurations(self,feature=""):
+        if feature:
+            self.response = self.table.get_item(Key={'feature': feature})
+        else:
+             self.response = self.table.scan()
 
     def get_all_items(self):
         self.response = self.table.scan()
@@ -86,6 +114,13 @@ class DynamoDb():
 
     def service_exists(self, name):
         self.get_item_by_name(name)
+        if self.item == "item not found":
+            return False
+        else:
+            return True
+
+    def internal_configuration_exists(self, feature):
+        self.get_internal_configurations(feature=feature)
         if self.item == "item not found":
             return False
         else:
