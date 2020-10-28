@@ -18,8 +18,13 @@ def internal_configurations():
     if request.method == "GET":
         data = ""
         if args.get("feature"):
-            db.get_internal_configurations(feature=args.get("feature"))  
-            data = db.item
+            if not db.internal_configuration_exists(feature=args.get("feature")):
+                return jsonify({
+                    "message": "`{}` feature not found".format(args.get("feature"))
+                    }), 404
+            else:
+                db.get_internal_configurations(feature=args.get("feature"))  
+                data = db.item
         else:
             db.get_internal_configurations()
             data = db.items
@@ -37,7 +42,7 @@ def internal_configurations():
             try:
                 db.update_internal_configuration(args.get("feature"), request.get_json())
                 return jsonify({"message": "Succssefuly upated."}), 200
-                
+
             except Exception as e:
                 raise ApiException(e.message, 500)
         
