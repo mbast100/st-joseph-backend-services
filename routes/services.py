@@ -32,6 +32,12 @@ def api_services():
             if len(db.items) == 0:
                 return jsonify({"message":"no items found for month: '{}'".format(args.get("month"))}), 404
             return jsonify(db.items),200
+        
+        elif args.get("name"):
+            db.get_item_by_name(args.get("name"))
+            if len(db.item) == 0:
+                return jsonify({"message":"no items found for name: '{}'".format(args.get("name"))}), 404
+            return jsonify(db.item),200
 
         else:
             db.get_all_items()
