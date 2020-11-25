@@ -5,13 +5,18 @@ from controller.aws.s3_buckets import S3Bucket
 
 @app.route('/api/media', methods=["GET", "POST", "DELETE"])
 def media():
-    s3 = S3Bucket()
     args = request.args
+    bucket_name = args.get("bucket")    
+    if not bucket_name:
+        return jsonify({"message": "missing query param 'bucket'"}), 400
+    
+    s3 = S3Bucket(bucket_name=bucket_name)
     if request.method == "GET":
-        if args.get("bucket"):
-            return jsonify(s3.list_files(args.get("bucket"))), 200
+        if args.get("prefix"):
+            s3.list_files_by_prefix(args.get("prefix"))
         else:
-            return jsonify({"message":"missing query param 'bucket'"}), 400
+            s3.list_files(args.get("bucket"))
+        return jsonify(s3.contents), 200
     
     elif request.method == "POST":
         try:
