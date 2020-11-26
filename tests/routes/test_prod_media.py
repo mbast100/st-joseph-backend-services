@@ -7,8 +7,6 @@ class TestProdMedia():
         web = HTTPcore(media_endpoint)
         web.core("GET", params={"bucket":"st-joseph-media"})
         assert web.get_status_code == 200
-        print(web.json_response)
-        assert len(web.json_response) == 5
 
     def test_get_media_by_without_bucket_name(self, media_endpoint):
         web = HTTPcore(media_endpoint)
@@ -23,3 +21,4 @@ class TestProdMedia():
         assert web.get_status_code == 200
         for item in web.json_response:
             assert prefix in item["Key"]
+            assert "url" in item
