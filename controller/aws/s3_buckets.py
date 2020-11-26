@@ -9,14 +9,18 @@ class S3Bucket():
         self.s3_client = boto3.client('s3')
         self.s3_resource = boto3.resource('s3')
         self.response = {}
+        self.prefix = ''
         self.bucket_name = bucket_name
         self.file_name = filename
-        self.message = {}
+        self.message = ""
         self.image_url_seaonsal = "https://st-joseph-seasonal.s3.amazonaws.com/{}/{}"
         self.image_url = "https://st-joseph-media.s3.amazonaws.com/{}/{}"
         self.response_message = {
             "success": "uploaded {} to {}"
         }
+
+    def set_prefix(self,prefix):
+        self.prefix = prefix
 
     @property
     def bucket(self):
@@ -57,15 +61,27 @@ class S3Bucket():
                 raise ApiException("bucket not found", 400)
 
     def list_files_by_prefix(self, prefix):
-        #result = self.bucket.objects.filter(Prefix='{}/'.format(prefix))
+        self.set_prefix(prefix)
         self.response = self.s3_client.list_objects(
             Bucket=self.bucket_name, Prefix="{}/".format(prefix))
+
+    def object_url(self, key, location="us-east-1"):
+        return "https://{}.s3.amazonaws.com/{}".format(self.bucket_name, key)
+
 
     @property
     def contents(self):
         try:
-            return self.response.get("Contents")
+            contents = self.response["Contents"]
+            if contents[0]["Key"]:
+                for item in contents:
+                    try:
+                        item["url"] = self.object_url(item["Key"])
+                    except KeyError:
+                        raise ApiException("S3 bucket missing key.")
+            return contents
         except KeyError:
+            self.message = "No contents found in s3 bucket response."
             return ''
 
     @property
@@ -74,4 +90,7 @@ class S3Bucket():
 
     @property
     def error(self):
-        return self.response["Error"]
+        try:
+            return self.response["Error"]
+        except KeyError:
+            return self.message
