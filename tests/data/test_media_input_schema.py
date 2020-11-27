@@ -3,6 +3,7 @@ import json
 from data.media.media_input_schema import MediaInputSchema
 from schema import SchemaError
 
+
 class TestMediaInputSchema():
 
     def test_media_input_schema(self):
