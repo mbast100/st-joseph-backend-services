@@ -8,10 +8,12 @@ class TestMediaInputSchema():
 
     def test_media_input_schema(self):
         params = {
+            "key": "schedule",
             "name": "radnom name",
             "url": "www.google.com",
             "createdOn": "some date",
-            "type": "image"
+            "type": "monthly-schedule",
+            "file_type":"pdf"
         }
         input_schema = MediaInputSchema(params)
         assert input_schema
@@ -19,6 +21,7 @@ class TestMediaInputSchema():
 
     def test_media_input_schema_missing_url(self):
         params = {
+            "key": "schedule",
             "name": "random name",
             "createdOn": "some date",
         }
@@ -36,6 +39,7 @@ class TestMediaInputSchema():
 
     def test_media_input_schema_type_error(self):
         params = {
+            "key": "schedule",
             "name": "random name",
             "url": "www.google.com",
             "createdOn": "some date",
@@ -46,6 +50,7 @@ class TestMediaInputSchema():
 
     def test_media_input_schema_error_if_name_is_int(self):
         params = {
+            "key": "schedule",
             "name": 123,
             "url": "www.google.com",
             "createdOn": "some date",
