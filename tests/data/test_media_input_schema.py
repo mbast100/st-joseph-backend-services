@@ -6,55 +6,44 @@ from schema import SchemaError
 
 class TestMediaInputSchema():
 
+    required_fileds = {
+        "key": "schedule",
+        "name": "radnom name",
+        "url": "www.google.com",
+        "createdOn": "some date",
+        "type": "monthly-schedule",
+        "file_type": "pdf"
+    }
+
     def test_media_input_schema(self):
-        params = {
-            "key": "schedule",
-            "name": "radnom name",
-            "url": "www.google.com",
-            "createdOn": "some date",
-            "type": "monthly-schedule",
-            "file_type":"pdf"
-        }
-        input_schema = MediaInputSchema(params)
+        input_schema = MediaInputSchema(self.required_fileds)
+        print(input_schema)
         assert input_schema
-        assert input_schema.first == params
+        assert input_schema.data == self.required_fileds
 
     def test_media_input_schema_missing_url(self):
-        params = {
-            "key": "schedule",
-            "name": "random name",
-            "createdOn": "some date",
-        }
+        params = self.required_fileds
+        params["url"] = ""
         with pytest.raises(SchemaError):
             MediaInputSchema(params)
 
     def test_media_input_schema_missing_name(self):
-        params = {
-            "createdOn": "some date",
-            "url": "www.google.com",
-            "type": "pdf",
-        }
+        params = self.required_fileds
+        params["name"] = ""
+
         with pytest.raises(SchemaError):
             MediaInputSchema(params)
 
     def test_media_input_schema_type_error(self):
-        params = {
-            "key": "schedule",
-            "name": "random name",
-            "url": "www.google.com",
-            "createdOn": "some date",
-            "type": "RANDOM"
-        }
+        params = self.required_fileds
+        params["type"] = "random"
+
         with pytest.raises(SchemaError):
             MediaInputSchema(params)
 
     def test_media_input_schema_error_if_name_is_int(self):
-        params = {
-            "key": "schedule",
-            "name": 123,
-            "url": "www.google.com",
-            "createdOn": "some date",
-            "type": "RANDOM"
-        }
+        params = self.required_fileds
+        params["name"] = 123
+
         with pytest.raises(SchemaError):
             MediaInputSchema(params)

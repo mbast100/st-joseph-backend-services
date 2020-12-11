@@ -1,4 +1,5 @@
 from schema import Schema, Use, And, Optional, Or
+from data.services.time_and_date_schema import time_and_date_schema
 
 regular_service_schema = Schema(
     [{
@@ -7,7 +8,7 @@ regular_service_schema = Schema(
         'external_url': Use(dict),
         'display': Use(bool),
         'title': And(str, len),
-        'serviceTimeAndDate': And(list, len),
+        'serviceTimeAndDate': And(list, [time_and_date_schema])
     }])
 
 
