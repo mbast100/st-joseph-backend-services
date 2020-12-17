@@ -1,4 +1,4 @@
-from data.services.services_schema import Services
+from data.services.schemas.services_schema import Services
 from schema import SchemaError
 from pytest import raises
 

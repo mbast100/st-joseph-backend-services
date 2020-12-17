@@ -1,5 +1,5 @@
 from schema import Schema, Use, And, Optional, Or
-from data.services.services_schema import services, Services
+from data.services.schemas.services_schema import services, Services
 
 seasonal_service_schema = Schema(
     {

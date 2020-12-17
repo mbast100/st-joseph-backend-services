@@ -1,5 +1,5 @@
-from data.services.seasonal_service_input_schema import SeasonalServiceInputSchema
-from data.services.services_schema import Services
+from data.services.schemas.seasonal_service_input_schema import SeasonalServiceInputSchema
+from data.services.schemas.services_schema import Services
 from schema import SchemaError, SchemaMissingKeyError
 import pytest
 

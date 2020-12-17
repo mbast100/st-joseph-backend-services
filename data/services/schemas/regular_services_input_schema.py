@@ -1,5 +1,5 @@
 from schema import Schema, Use, And, Optional, Or
-from data.services.time_and_date_schema import time_and_date_schema
+from data.services.schemas.time_and_date_schema import time_and_date_schema
 
 regular_service_schema = Schema(
     [{

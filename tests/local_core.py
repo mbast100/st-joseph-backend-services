@@ -4,14 +4,15 @@ from urllib.parse import urlencode
 
 class ClientInstanceCore:
 
-    def __init__(self, host='localhost', admin=False):
+    def __init__(self, host='localhost', admin=False, url=''):
         self.host = host
         self.client = app.test_client()
         self.json_response = {}
         self.response = ''
         self.admin = admin
+        self._url = url
 
-    def core(self, action, url, data='', params='', token='', cookie='', headers='', custom_headers=False):
+    def core(self, action, url='', data='', params='', token='', cookie='', headers='', custom_headers=False):
         
         if self.admin:
             headers = {
@@ -19,6 +20,7 @@ class ClientInstanceCore:
             }
 
         res = ''
+        url = self._url if self._url else url
         if action == 'GET':
             if params:
                 res = self.client.get(url+"?"+urlencode(params), headers=headers)
@@ -60,6 +62,3 @@ class ClientInstanceCore:
         except KeyError:
             return ''
 
-    @property
-    def username(self):
-        return self.user_property.get('username')

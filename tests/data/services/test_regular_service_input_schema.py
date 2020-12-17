@@ -1,4 +1,4 @@
-from data.services.regular_services_input_schema import RegularServiceInputSchema
+from data.services.schemas.regular_services_input_schema import RegularServiceInputSchema
 from schema import SchemaError, SchemaMissingKeyError
 import pytest
 

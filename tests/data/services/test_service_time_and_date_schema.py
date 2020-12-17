@@ -1,4 +1,4 @@
-from data.services.time_and_date_schema import TimeAndDate
+from data.services.schemas.time_and_date_schema import TimeAndDate
 from schema import SchemaError, SchemaMissingKeyError
 from pytest import raises
 

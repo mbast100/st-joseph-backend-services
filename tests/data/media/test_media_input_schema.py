@@ -1,6 +1,6 @@
 import pytest
 import json
-from data.media.media_input_schema import MediaInputSchema
+from data.media.schemas.media_input_schema import MediaInputSchema
 from schema import SchemaError
 
 
