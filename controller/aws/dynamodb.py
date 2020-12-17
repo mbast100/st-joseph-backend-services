@@ -4,6 +4,7 @@ from boto3.dynamodb.conditions import Key, Attr
 from controller.aws.helpers import *
 from datetime import date
 
+
 class DynamoDb():
     def __init__(self, table_name):
         self.table_name = table_name
@@ -18,7 +19,8 @@ class DynamoDb():
             )
         except Exception as e:
             print(e)
-            raise ApiException("oops something wrong while create the service", status_code=500)
+            raise ApiException(
+                "oops something wrong while create the service", status_code=500)
 
     def update_service(self, name, updates):
         for update in updates.keys():
@@ -36,7 +38,7 @@ class DynamoDb():
             except ClientError:
                 print(ClientError.__dict__())
                 raise ApiException("oops", 400)
-    
+
     def update_internal_configuration(self, feature, updates):
 
         for update in updates.keys():
@@ -59,11 +61,11 @@ class DynamoDb():
                 print(e)
                 raise ApiException("oops", 500)
 
-    def get_internal_configurations(self,feature=""):
+    def get_internal_configurations(self, feature=""):
         if feature:
             self.response = self.table.get_item(Key={'feature': feature})
         else:
-             self.response = self.table.scan()
+            self.response = self.table.scan()
 
     def get_all_items(self):
         self.response = self.table.scan()
@@ -71,18 +73,29 @@ class DynamoDb():
     def get_item_by_name(self, name):
         self.response = self.table.get_item(Key={'name': name})
 
-    def get_items_by_month(self,month):
-        self.response = self.table.scan(FilterExpression=Attr('month').eq(month))
+    def get_item_by_key(self, key):
+        self.response = self.table.get_item(Key={'key': key})
+
+    def get_items_by_month(self, month):
+        self.response = self.table.scan(
+            FilterExpression=Attr('month').eq(month))
 
     def get_item_by_email(self, email):
         self.response = self.table.get_item(Key={'email': email})
 
     def get_items_by_type(self, type):
         self.response = self.table.scan(FilterExpression=Attr('type').eq(type))
-    
+
     def get_items_by_type_and_month(self, type, month):
         self.response = self.table.scan(
             FilterExpression=Attr("type").eq(type) & Attr("month").eq(month))
+
+    def where(self, key, value):
+        self.response = self.table.get_item(Key={key: value})
+    
+    def get_items_by_non_schema_key(self, key, value):
+        self.response = self.table.scan(
+            FilterExpression=Attr(key).eq(value))
 
     def create_seasonal_service(self, service):
         try:
@@ -103,9 +116,15 @@ class DynamoDb():
     def create_commemoration(self, service):
         try:
             valid_seasonal_services(service)
-            service.update({"type":"commemoration"})
-            service.update({"createdOn":self.today.strftime("%d/%m/%Y")})
+            service.update({"type": "commemoration"})
+            service.update({"createdOn": self.today.strftime("%d/%m/%Y")})
             self.create(service)
+        except Exception as e:
+            raise ApiException(e.__dict__.get("message"), 400)
+
+    def create_media(self, media):
+        try:
+            self.create(media)
         except Exception as e:
             raise ApiException(e.__dict__.get("message"), 400)
 
@@ -142,15 +161,15 @@ class DynamoDb():
         try:
             return self.response["Items"]
         except KeyError:
-            return "items not found"
+            return ""
 
     @property
     def item(self):
         try:
             return self.response["Item"]
         except KeyError:
-            return "item not found"
-    
+            return ""
+
     @property
     def sorted_items(self):
         if self.items != "items not found":
