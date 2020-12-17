@@ -12,7 +12,7 @@
 
 ### Dev Enviorement
 - `python -V` 3.7 or greater.
-- clone repo: `git clone https://github.com/mbast100/st-joseph-web-backend-login.git`
+- clone repo: `git clone https://github.com/mbast100/st-joseph-backend-services.git`
 - only cd project root & run (Only required first time):
     - Mac: `python3 -m venv venv`
     - Windows: `python -m venv venv`
