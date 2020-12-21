@@ -6,9 +6,15 @@
 
 ./idea
 /idea
-
+.vscode
+__pycache__/
+/pytest_cache
 .pytest_cache
 .__pycache__
 ./__pycache__
 *./__pycache__
 /tests/__pycache__/*
+__pycache__/
+
+*.pyc
+./__pycache__
