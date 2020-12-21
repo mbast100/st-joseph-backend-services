@@ -13,7 +13,7 @@ class ClientInstanceCore:
         self._url = url
 
     def core(self, action, url='', data='', params='', token='', cookie='', headers='', custom_headers=False):
-        
+
         if self.admin:
             headers = {
                 "Authorization": token
@@ -23,19 +23,29 @@ class ClientInstanceCore:
         url = self._url if self._url else url
         if action == 'GET':
             if params:
-                res = self.client.get(url+"?"+urlencode(params), headers=headers)
+                res = self.client.get(
+                    url+"?"+urlencode(params), headers=headers)
             else:
                 res = self.client.get(url, headers=headers)
 
         elif action == 'POST':
             if data:
                 if params:
-                    res = self.client.post(url+"?"+urlencode(params), json=data, headers=headers)
+                    res = self.client.post(
+                        url+"?"+urlencode(params), json=data, headers=headers)
                 else:
                     res = self.client.post(url, json=data, headers=headers)
+        elif action == 'PUT':
+            if data:
+                if params:
+                    res = self.client.put(url+"?"+urlencode(params), json=data, headers=headers)
+                else:
+                    res = self.client.put(url, json=data, headers=headers)
+
         elif action == 'DELETE':
             if params:
-                res = self.client.delete(url + "?" + urlencode(params), json=data, headers=headers)
+                res = self.client.delete(
+                    url + "?" + urlencode(params), json=data, headers=headers)
             else:
                 res = self.client.delete(url, json=data, headers=headers)
 
@@ -44,7 +54,7 @@ class ClientInstanceCore:
             self.json_response = res.json
         except Exception as e:
             self.json_response = "Something went wrong :"+self.response
-        if self.status_code != 200 or self.status_code != 201:
+        if self.status_code not in [200, 201, 204]:
             print(self.json_response)
         return res
 
@@ -62,3 +72,9 @@ class ClientInstanceCore:
         except KeyError:
             return ''
 
+    @property
+    def error(self):
+        try:
+            return self.json_response.get('error')
+        except KeyError:
+            return ''

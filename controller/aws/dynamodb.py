@@ -10,6 +10,8 @@ class DynamoDb():
         self.table_name = table_name
         self.table = dynamodb.Table(table_name)
         self.response = {}
+        self._error = ''
+        self._message = ''
         self.today = date.today()
 
     def create(self, item):
@@ -90,9 +92,14 @@ class DynamoDb():
         self.response = self.table.scan(
             FilterExpression=Attr("type").eq(type) & Attr("month").eq(month))
 
-    def where(self, key, value):
+    def _where(self, params={}):
+        keys = list(params.keys())
+        self.response = self.table.scan(
+            FilterExpression=Attr(keys[0]).eq(params[keys[0]]) & Attr(keys[1]).eq(params[keys[1]]))
+
+    def find(self, key, value):
         self.response = self.table.get_item(Key={key: value})
-    
+
     def get_items_by_non_schema_key(self, key, value):
         self.response = self.table.scan(
             FilterExpression=Attr(key).eq(value))
@@ -122,21 +129,32 @@ class DynamoDb():
         except Exception as e:
             raise ApiException(e.__dict__.get("message"), 400)
 
+    def create_service(self, service, service_type):
+        try:
+            service.update({"type": service_type})
+            self.create(service)
+        except Exception as e:
+            raise ApiException(e.__dict__.get("message"), 400)
+
     def create_media(self, media):
         try:
             self.create(media)
         except Exception as e:
             raise ApiException(e.__dict__.get("message"), 400)
 
-    def delete(self, name):
-        self.response = self.table.delete_item(Key={"name": name})
+    def delete_by_schema_key(self, key, value):
+        self.response = self.table.delete_item(Key={key: value})
+
+    def delete_batch(self, keys, schema_key):
+        for key in keys:
+            self.delete_by_schema_key(schema_key, key)
 
     def service_exists(self, name):
         self.get_item_by_name(name)
-        if self.item == "item not found":
-            return False
-        else:
-            return True
+        exists = True if self.item else False
+        if exists:
+            self._message = "Duplicate service name for '{}'".format(name)
+        return exists
 
     def internal_configuration_exists(self, feature):
         self.get_internal_configurations(feature=feature)

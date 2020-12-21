@@ -17,7 +17,6 @@ class TestMediaInputSchema():
 
     def test_media_input_schema(self):
         input_schema = MediaInputSchema(self.required_fileds)
-        print(input_schema)
         assert input_schema
         assert input_schema.data == self.required_fileds
 

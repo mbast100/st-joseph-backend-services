@@ -1,7 +1,7 @@
 from data.services.services import Services
+import pytest
 
-
-class TestServices():
+class TestSeasonalServices():
 
     @property
     def required_fields(self):
@@ -63,6 +63,7 @@ class TestServices():
         service = Services()
         assert not service.save
 
+    @pytest.mark.update
     def test_update_service(self, get_random_string):
         services = Services()
         random_title = get_random_string
@@ -88,3 +89,10 @@ class TestServices():
         after_update = services.service[0]
 
         assert before_update == after_update
+
+    @pytest.mark.batch
+    def test_delete_by_batch(self, get_random_string):
+        services = Services()
+        items = ["Test Regular Servicebigpq", "Test Regular Servicekizhr", "Test Regular Serviceibqtg"]
+        services.delete_all(items)
+        assert services.status_code == 200

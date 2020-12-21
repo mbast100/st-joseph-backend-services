@@ -1,8 +1,11 @@
 from app import app
 from flask import request, jsonify, make_response
 from api_exception import ApiException
-from controller.aws.dynamodb import DynamoDb
 import json
+from data.services.services import Services
+from utils.auth import validate_token
+import os
+
 
 @app.errorhandler(ApiException)
 def handle_invalid_service(error):
@@ -11,77 +14,92 @@ def handle_invalid_service(error):
     return response
 
 
-@app.route('/api/services', methods=['GET','POST', 'PUT', 'DELETE'])
+@app.before_request
+def before_request_func():
+    if request.method in ["POST", "PUT", "DELETE"] and not app.testing:
+        validate_token()
+
+
+@app.route('/api/services', methods=['GET', 'POST', 'PUT', 'DELETE'])
 def api_services():
     args = request.args
-    db = DynamoDb("services")
-    
+    query_param = args.to_dict()
+    #db = DynamoDb("services")
+
     if request.method == 'GET':
-        if args.get("type"):
-            if args.get("month"):
-                db.get_items_by_type_and_month(args.get("type"), args.get("month"))
+        services = Services()
+        if len(args.to_dict()) == 2:
+            data = services.where(query_param)
+            if len(data) == 0:
+                return jsonify({"message": "No items found for {}.".format(str(query_param))}), 404
             else:
-                db.get_items_by_type(args.get("type"))
+                return jsonify(data), 200
 
-            if len(db.items) == 0:
-                return jsonify({"message":"no items found for type: '{}'".format(args.get("type"))}), 404
-            return jsonify(db.items), 200
-
-        elif args.get("month"):
-            db.get_items_by_month(args.get("month"))
-            if len(db.items) == 0:
-                return jsonify({"message":"no items found for month: '{}'".format(args.get("month"))}), 404
-            return jsonify(db.items),200
-        
-        elif args.get("name"):
-            db.get_item_by_name(args.get("name"))
-            if len(db.item) == 0:
-                return jsonify({"message":"no items found for name: '{}'".format(args.get("name"))}), 404
-            return jsonify(db.item),200
+        elif len(args.to_dict()) == 1:
+            key = list(query_param.keys())[0]
+            data = services.find_by(key, query_param.get(key))
+            if len(data) == 0:
+                return jsonify({"message": "No items found for {}.".format(str(query_param))}), 404
+            return jsonify(data), 200
 
         else:
-            db.get_all_items()
-            response = make_response(jsonify(db.items), 200)
-            response.headers["Content-Range"] = len(db.items)
+            data = Services().all
+            response = make_response(jsonify(data), 200)
+            response.headers["Content-Range"] = len(data)
             response.headers['Access-Control-Expose-Headers'] = 'Content-Range'
             return response
 
     elif request.method == "POST":
         data = request.get_json()
-        if db.service_exists(data["name"]):
-            return jsonify({"message":"duplicate service name"}), 400
+        services = Services(params=data, type=args.get("type"))
+
+        if not services.ok or services.exists:
+            resp = {}
+            if services.error:
+                resp["error"] = services.error
+            resp["message"] = services.message
+            return jsonify(resp), 400
 
         try:
-            if args.get("type") == "seasonal":
-                db.create_seasonal_service(data)
-            if args.get("type") == "regular":
-                db.create_regular_service(data)
-            if args.get("type") == "commemoration":
-                db.create_commemoration(data)
-
-            if db.status_code == 200:
+            if services.save:
                 return jsonify({"message": "Service created"}), 201
+            else:
+                return jsonify({"message": "Something went wrong when trying to create service"}), 500
         except Exception as e:
             raise ApiException(e.__dict__.get("message"), status_code=400)
 
     elif request.method == 'PUT':
         data = request.get_json()
-        if db.service_exists(args.get("name")):
+        if not args.get("name"):
+            return jsonify({"message": "Missing query param 'name'."}), 400
+
+        services = Services()
+        records = services.find_by("name", args.get("name"))
+        if len(records) > 0:
             try:
-                db.update_service(args.get("name"), data)
-                return jsonify({"message":"updated {}".format(args.get("name"))}), 200
+                services.update(updates=data)
+                return jsonify({"message": services.message}), 200
             except Exception as e:
                 raise ApiException(e.__dict__.get("message"), status_code=400)
-        return jsonify({"message":"no service found with the following name: {}".format(args.get("name"))}), 404
+        else:
+            return jsonify({"message": "no service found with the following name: {}".format(args.get("name"))}), 404
 
     elif request.method == "DELETE":
         data = request.get_json()
         if not data:
-            return jsonify({"message":"missing data"}), 400
-        try:
-            db.delete(data["name"])
-            print(db.response)
-            if db.status_code == 200:
-                return jsonify({"message": "Service deleted"}), 200
-        except Exception as e:
-            raise ApiException(e.__dict__.get("message"), status_code=400)
+            return jsonify({"message": "missing data"}), 400
+
+        services = Services(params=data)
+        if args.get("type") and args.get("type") == "batch":
+            try:
+                services.delete_all(data)
+            except Exception as e:
+                raise ApiException(
+                    "Something went wrong when trying t batch delete", 500)
+        else:
+            try:
+                if services.delete:
+                    return jsonify({"message": "Service deleted."}), 200
+
+            except Exception as e:
+                raise ApiException(e.__dict__.get("message"), status_code=400)

@@ -20,7 +20,7 @@ class TestRegularServiceInputSchema():
         }
         input_schema = RegularServiceInputSchema(params)
         assert input_schema
-        assert input_schema.first == params
+        assert input_schema.data == params
 
     def test_regular_service_input_missing_field_schema(self):
         params = {
