@@ -78,7 +78,7 @@ def regular_service(url=""):
 def seasonal_service_new():
 
     letters = string.ascii_lowercase
-    result_str = ''.join(random.choice(letters) for i in range(5))
+    result_str = ''.join(random.choice(letters) for i in range(6))
 
     return SeasonalServiceInputSchema({
         'name': 'Seasonal Service Test '+result_str,

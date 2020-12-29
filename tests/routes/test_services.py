@@ -93,10 +93,12 @@ class TestServices():
         assert self.client.message == "Duplicate service name for '{}'".format(
             seasonal_service.name)
 
+    @pytest.mark.create_commemoration
     @pytest.mark.commemoration
-    def test_create_commemoration_service(self, seasonal_service_new, get_random_string):
+    def test_create_commemoration_service(self, seasonal_service_new):
         self.client.core("POST", data=seasonal_service_new.data,
                          params={"type": "commemoration"})
+        print(self.client.json_response)
         assert self.client.status_code == 201
 
     @pytest.mark.commeoration
