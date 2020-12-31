@@ -12,6 +12,8 @@ regular_service_schema = Schema(
         Optional('displayName'): And(str, len),
         Optional('note'): Use(str),
         Optional("updated_on"): Use(str),
+        Optional('createdBy'):Use(str),
+        Optional('updatedOn'):Use(str),
     })
 
 
