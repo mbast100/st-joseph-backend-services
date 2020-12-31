@@ -12,7 +12,9 @@ seasonal_service_schema = Schema(
         'display': Use(bool),
         'title': And(str, len),
         Optional('commemorationDate'): And(str, len),
+        Optional('serviceDate'): And(str, len),
         Optional('updatedBy'): And(str, len),
+        Optional('createdBy'): And(str, len),
         Optional('updatedOn'): And(str, len),
         Optional('note'): Use(str),
     })
