@@ -1,6 +1,7 @@
 import pytest
 import string
 import random
+from controller.aws.parameter_store import ParameterStore
 from data.media.schemas.media_input_schema import MediaInputSchema
 from data.services.schemas.regular_services_input_schema import RegularServiceInputSchema
 from data.services.schemas.seasonal_service_input_schema import SeasonalServiceInputSchema
@@ -179,3 +180,7 @@ def get_random_string(length=10):
     letters = string.ascii_lowercase
     result_str = ''.join(random.choice(letters) for i in range(length))
     return result_str
+
+@pytest.fixture(scope="session")
+def store(scope="session"):
+    return ParameterStore(prefix='/TEST')
