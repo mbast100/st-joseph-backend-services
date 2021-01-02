@@ -3,6 +3,7 @@ from botocore.exceptions import *
 from boto3.dynamodb.conditions import Key, Attr
 from controller.aws.helpers import *
 from datetime import date
+import uuid
 
 
 class DynamoDb():
@@ -192,3 +193,7 @@ class DynamoDb():
     def sorted_items(self):
         if self.items != "items not found":
             return sorted(self.items, lambda i: i["month"])
+
+    def generate_id(self):
+        id = uuid.uuid4()
+        return str(id)
