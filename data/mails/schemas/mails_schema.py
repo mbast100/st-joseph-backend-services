@@ -5,7 +5,7 @@ mails_schema = Schema(
         'message': And(str, len),
         'full_name': And(str, len),
         'email': And(str, len),
-        Optional('subject'): And(str, len),
+        Optional('subject'): Use(str),
     })
 
 
