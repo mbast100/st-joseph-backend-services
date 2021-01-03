@@ -4,13 +4,13 @@ from schema import SchemaError
 from api_exception import ApiException
 import datetime
 
+
 class Mails(DynamoDb):
 
     def __init__(self, params=''):
         super().__init__(table_name="st_joseph_mails")
         self.params = params
         self.error = ""
-        self.message = ""
         self.schema_key = 'id'
 
     @property
@@ -79,6 +79,7 @@ class Mails(DynamoDb):
                 print(e)
                 return False
         else:
+            self.error = "Schema validation failed."
             return False
 
     @property
@@ -89,3 +90,19 @@ class Mails(DynamoDb):
         except SchemaError:
             self.error = SchemaError.__dict__.get('__doc__')
             return False
+
+    @property
+    def full_name(self):
+        return self.params['full_name']
+
+    @property
+    def email(self):
+        return self.params['email']
+
+    @property
+    def message(self):
+        return self.params['message']
+
+    @property
+    def phone_number(self):
+        return self.params['phone_number']

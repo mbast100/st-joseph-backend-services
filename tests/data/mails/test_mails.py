@@ -1,12 +1,13 @@
 from data.mails.mails import Mails
 import pytest
 
+
 class TestMails():
 
     @property
     def required_fields(self):
         return {
-            'email':"test@test.com",
+            'email': "test@test.com",
             'subject': "test",
             'message': "Hello this is a test",
             'full_name': 'Jhon doe',
@@ -16,7 +17,7 @@ class TestMails():
         mail = Mails(params=self.required_fields)
         assert mail.ok
 
-    def test_required_missing_fields_title(self):
+    def test_missing_fields_email(self):
         required_fields = self.required_fields
         required_fields["email"] = ""
         mail = Mails(params=required_fields)
@@ -29,5 +30,6 @@ class TestMails():
     def test_not_save_mails_if_schema_not_ok(self):
         required_fields = self.required_fields
         required_fields["email"] = ""
+
         mail = Mails(params=required_fields)
         assert not mail.save
