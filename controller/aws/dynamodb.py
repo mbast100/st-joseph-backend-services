@@ -159,7 +159,7 @@ class DynamoDb():
 
     def internal_configuration_exists(self, feature):
         self.get_internal_configurations(feature=feature)
-        if self.item == "item not found":
+        if not self.item or not self.items:
             return False
         else:
             return True
