@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Contact Inquiry</title>
+  </head>
+  <body>
+    <div id="content" style="padding: 10px;">
+      <div>
+        <h2 style="margin-left: auto; margin-right: auto;">Contact Inquiry From Church Website</h2>
+      </div>
+      <div>
+        <div>
+          <p>From: {{full_name}}</p>
+          <p>Email: {{email}}</p>
+          <p>Phone number: {{phone_number}}</p>
+          <p>Message:</p>
+          <div>
+            {% for para in message %}
+            <p>{{para}}</p>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="padding: 10px; margin-top: 10px;">
+    <div>
+      <img
+        width="220px"
+        src="https://st-joseph-ministries.s3.amazonaws.com/st_joseph_logo_original_.png"
+      />
+    </div>
+    <div style="cursor: pointer;">
+      <a>https://www.stjosephchurch.ca/contact</a>
+    </div>
+  </div>
+  </body>
+</html>

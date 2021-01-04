@@ -12,8 +12,8 @@ regular_service_schema = Schema(
         Optional('displayName'): And(str, len),
         Optional('note'): Use(str),
         Optional("updated_on"): Use(str),
-        Optional('createdBy'):Use(str),
-        Optional('updatedOn'):Use(str),
+        Optional('createdBy'): Use(str),
+        Optional('updatedOn'): Use(str),
     })
 
 
@@ -25,7 +25,7 @@ class RegularServiceInputSchema():
     @property
     def data(self):
         return self.params
-    
+
     @property
     def first(self):
         return self.valid[0]

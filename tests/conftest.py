@@ -131,6 +131,7 @@ def seasonal_service(url=""):
         ]
     })
 
+
 @pytest.fixture(scope='session')
 def regular_service_new(url="", new=False):
     if not url:
@@ -180,6 +181,7 @@ def get_random_string(length=10):
     letters = string.ascii_lowercase
     result_str = ''.join(random.choice(letters) for i in range(length))
     return result_str
+
 
 @pytest.fixture(scope="session")
 def store(scope="session"):

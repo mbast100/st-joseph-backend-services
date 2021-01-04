@@ -79,7 +79,6 @@ class Mails(DynamoDb):
                 print(e)
                 return False
         else:
-            self.error = "Schema validation failed."
             return False
 
     @property
@@ -105,4 +104,7 @@ class Mails(DynamoDb):
 
     @property
     def phone_number(self):
-        return self.params['phone_number']
+        try:
+            return self.params['phone_number']
+        except KeyError:
+            return ''

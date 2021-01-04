@@ -33,4 +33,7 @@ class MailsSchema():
 
     @property
     def phone_number(self):
-        return self.params['phone_number']
+        try:
+            return self.params['phone_number']
+        except KeyError:
+            return ''
