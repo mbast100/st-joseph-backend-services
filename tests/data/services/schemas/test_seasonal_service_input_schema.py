@@ -113,3 +113,18 @@ class TestSeasonalServiceTest():
         input_schema = SeasonalServiceInputSchema(params)
         assert input_schema
         assert input_schema.valid == params
+
+    def test_schema_date_of_different_types(self):
+        params = self.required_fields()
+        params['date'] = "11-02-2020"
+
+        input_schema = SeasonalServiceInputSchema(params)
+        assert input_schema
+        assert input_schema.valid == params
+
+        params = self.required_fields()
+        params['date'] = {"start": "11-02-2020", "end": "11-12-2020"}
+
+        input_schema = SeasonalServiceInputSchema(params)
+        assert input_schema
+        assert input_schema.valid == params

@@ -17,6 +17,8 @@ seasonal_service_schema = Schema(
         Optional('createdBy'): And(str, len),
         Optional('updatedOn'): And(str, len),
         Optional('note'): Use(str),
+        Optional('dateRange'): Use(bool),
+        Optional('date'): Or(dict, str)
     })
 
 
