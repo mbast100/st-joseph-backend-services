@@ -28,7 +28,6 @@ def internal_configurations():
         else:
             db.get_internal_configurations()
             data = db.items
-        print("\nhere!")
         return jsonify(data), 200
     
     elif request.method == "POST":

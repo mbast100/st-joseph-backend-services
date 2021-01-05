@@ -1,10 +1,22 @@
 {
-    "prod": {
-        "app_function": "app.app",
-        "aws_region": "us-east-1",
-        "profile_name": "default",
-        "project_name": "st-joseph-backe",
-        "runtime": "python3.8",
-        "s3_bucket": "st-joseph-services"
-    }
+  "prod": {
+    "app_function": "app.app",
+    "aws_region": "us-east-1",
+    "profile_name": "default",
+    "project_name": "st-joseph-backe",
+    "runtime": "python3.8",
+    "s3_bucket": "st-joseph-services",
+    "extra_permissions": [
+      {
+        "Effect": "Allow",
+        "Action": ["ssm:DescribeParameters"],
+        "Resource": "*"
+      },
+      {
+        "Action": ["ssm:GetParameter"],
+        "Effect": "Allow",
+        "Resource": "arn:aws:ssm:us-east-1:360870245078:parameter/*"
+      }
+    ]
+  }
 }
