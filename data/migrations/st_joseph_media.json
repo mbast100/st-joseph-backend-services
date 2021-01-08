@@ -1,0 +1,13 @@
+{
+    "TableName": "st_joseph_media",
+    "KeySchema": [
+      { "AttributeName": "id", "KeyType": "HASH" }
+    ],
+    "AttributeDefinitions": [
+      { "AttributeName": "id", "AttributeType": "S" }
+    ],
+    "ProvisionedThroughput": {
+      "ReadCapacityUnits": 5,
+      "WriteCapacityUnits": 5
+    }
+}

@@ -7,7 +7,12 @@ import boto3
 app = Flask(__name__)
 cors = CORS(app, resources={ r'/*': {'origins': "*"}}, supports_credentials=True)
 
-dynamodb = boto3.resource('dynamodb')
+if app.config["ENV"] == 'testing':
+    app.config["TESTING"] = True
+    dynamodb = boto3.resource('dynamodb', endpoint_url='http://localhost:8000')
+else:
+    dynamodb = boto3.resource('dynamodb')
+
 store = ParameterStore(prefix='/STJOSEPH/PROD')
 
 app.config['MAIL_SERVER']='smtp.zoho.com'
