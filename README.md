@@ -32,6 +32,7 @@ After starting local db.
 - run: `aws dynamodb create-table --cli-input-json file://st_joseph_mails.json --endpoint-url http://localhost:8000`
 - run `aws dynamodb create-table --cli-input-json file://st_joseph_media.json --endpoint-url http://localhost:8000`
 - run `aws dynamodb create-table --cli-input-json file://srvices.json --endpoint-url http://localhost:8000`
+- run `aws dynamodb create-table --cli-input-json file://st_joseph_internal_configurations.json --endpoint-url http://localhost:8000`
 - run: `aws dynamodb list-tables --endpoint-url http://localhost:8000`
 output should look:
 ```json

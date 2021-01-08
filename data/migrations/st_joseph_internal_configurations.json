@@ -1,0 +1,13 @@
+{
+    "TableName": "st_joseph_internal_configurations",
+    "KeySchema": [
+      { "AttributeName": "feature", "KeyType": "HASH" }
+    ],
+    "AttributeDefinitions": [
+      { "AttributeName": "feature", "AttributeType": "S" }
+    ],
+    "ProvisionedThroughput": {
+      "ReadCapacityUnits": 5,
+      "WriteCapacityUnits": 5
+    }
+}
