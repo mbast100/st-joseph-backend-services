@@ -3,7 +3,7 @@ from utils.web import HTTPcore
 from flask import request
 from functools import wraps
 
-unprotected_path = ['/api/mails/contact']
+unprotected_path = ['/api/mails/contact', '/api/internal-configurations']
 
 def validate_token():
     if request.path in unprotected_path:
