@@ -176,7 +176,7 @@ class DynamoDb():
         return exists
 
     def internal_configuration_exists(self, feature):
-        self.get_internal_configurations(feature=feature)
+        self.find(self._schema_key,feature)
         if not self.item and not self.items:
             return False
         else:

@@ -28,10 +28,21 @@ class TestInternalConfigurations():
         internal_configs = InternalConfigurations()
         assert not internal_configs.update(updates)
 
-    def test_invalid_updates(self):
+    def test_invalid_input_updates(self):
         updates = ["hello"]
 
         internal_configs = InternalConfigurations()
+        assert not internal_configs.update(updates)
+
+    def test_invalid_update(self):
+        updates = {
+            "config": {
+                "image": "some_image_address",
+                "display": False
+            }
+        }
+
+        internal_configs = InternalConfigurations(feature="random23")
         assert not internal_configs.update(updates)
 
     def test_get_internal_config(self):
@@ -43,3 +54,8 @@ class TestInternalConfigurations():
 
         internal_config = InternalConfigurations().find_by("feature", "test_feature")
         assert len(internal_config) == 1
+
+    def test_get_internal_config_by_feature_name_that_dosent_exist(self):
+
+        internal_config = InternalConfigurations().find_by("feature", "random1")
+        assert len(internal_config) == 0

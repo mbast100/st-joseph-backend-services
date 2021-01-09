@@ -22,10 +22,11 @@ class InternalConfigurations(DynamoDb):
 
     @property
     def exists(self):
-        if self.ok and self.feature:
-            if self.internal_configuration_exists(self.feature):
-                self.message = self._message
-                return True
+        feature = self.feature or self.params["feature"]
+        self.find(self._schema_key, self.feature)
+
+        if self.item or self.items:
+            return True
         else:
             return False
 
@@ -53,10 +54,13 @@ class InternalConfigurations(DynamoDb):
         if not feature:
             feature = self.feature or self.params["feature"]
         try:
-            updates["updated_on"] = str(datetime.datetime.now())
-            self._update(feature, updates)
-            self.message = "Updated {}.".format(feature)
-            return True
+            if self.exists:
+                updates["updated_on"] = str(datetime.datetime.now())
+                self._update(feature, updates)
+                self.message = "Updated {}.".format(feature)
+                return True
+            else:
+                return False
         except Exception as e:
             return False
 

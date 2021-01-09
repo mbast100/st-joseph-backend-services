@@ -199,3 +199,15 @@ def internal_configuration_new():
         'feature': feature,
         'src': ["www.google.come/1", "www.google.come/2", "www.google.come/3"]
     })
+
+
+@pytest.fixture(scope='session')
+def internal_configuration():
+
+    letters = string.ascii_lowercase
+    result_str = ''.join(random.choice(letters) for i in range(5))
+    feature = 'test_feature_'+result_str
+    return InternalConfigurationsSchema({
+        'feature': feature,
+        'src': ["www.google.come/1", "www.google.come/2", "www.google.come/3"]
+    })
