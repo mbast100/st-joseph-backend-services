@@ -7,13 +7,14 @@ import uuid
 
 
 class DynamoDb():
-    def __init__(self, table_name):
+    def __init__(self, table_name, schema_key=''):
         self.table_name = table_name
         self.table = dynamodb.Table(table_name)
         self.response = {}
         self._error = ''
         self._message = ''
         self.today = date.today()
+        self._schema_key = schema_key
 
     def create(self, item):
         try:
@@ -24,6 +25,23 @@ class DynamoDb():
             print(e)
             raise ApiException(
                 "oops something wrong while create the service", status_code=500)
+
+    def _update(self, schema_key_value, updates):
+        for update in updates.keys():
+            try:
+                self.table.update_item(
+                    Key={
+                        self._schema_key: schema_key_value
+                    },
+                    UpdateExpression="set {} = :r".format(update),
+                    ExpressionAttributeValues={
+                        ':r': updates[update],
+                    },
+                    ReturnValues="UPDATED_NEW"
+                )
+            except ClientError:
+                print(ClientError.__dict__())
+                raise ApiException("oops", 400)
 
     def update_service(self, name, updates):
         for update in updates.keys():

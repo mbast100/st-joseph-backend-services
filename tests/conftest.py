@@ -7,6 +7,7 @@ from data.services.schemas.regular_services_input_schema import RegularServiceIn
 from data.services.schemas.seasonal_service_input_schema import SeasonalServiceInputSchema
 from data.services.schemas.time_and_date_schema import TimeAndDate
 from data.services.schemas.services_schema import Services
+from data.internal_configurations.schemas.internal_configurations_schemas import InternalConfigurationsSchema
 import os
 from app import app
 
@@ -186,3 +187,15 @@ def get_random_string(length=10):
 @pytest.fixture(scope="session")
 def store(scope="session"):
     return ParameterStore(prefix='/TEST')
+
+
+@pytest.fixture(scope='session')
+def internal_configuration_new():
+
+    letters = string.ascii_lowercase
+    result_str = ''.join(random.choice(letters) for i in range(5))
+    feature = 'test_feature'
+    return InternalConfigurationsSchema({
+        'feature': feature,
+        'src': ["www.google.come/1", "www.google.come/2", "www.google.come/3"]
+    })
