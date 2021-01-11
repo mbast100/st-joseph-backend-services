@@ -13,12 +13,13 @@ def contact():
         raise ApiException("Request body cant be empty", 400)
 
     mail_item = Mails(params=data)
+    to = mail_item.to or app.config["MAIL_USERNAME"]
 
     if mail_item.save:
         try:
             subject = "Mail from {}".format(mail_item.full_name)
             msg = Message(subject=subject,
-                          sender=app.config["MAIL_USERNAME"], recipients=[app.config["MAIL_USERNAME"]])
+                          sender=app.config["MAIL_USERNAME"], recipients=[to])
             msg.html = render_template(
                 "contact_from_website.html", full_name=mail_item.full_name, email=mail_item.email, message=mail_item.message.split('\n'), phone_number=mail_item.phone_number)
 

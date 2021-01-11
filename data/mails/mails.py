@@ -108,3 +108,10 @@ class Mails(DynamoDb):
             return self.params['phone_number']
         except KeyError:
             return ''
+    
+    @property
+    def to(self):
+        try:
+            return self.params['to']
+        except KeyError:
+            return ''
