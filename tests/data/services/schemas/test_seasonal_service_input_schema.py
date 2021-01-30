@@ -100,7 +100,7 @@ class TestSeasonalServiceTest():
 
     def test_schema_accepts_service_date(self):
         params = self.required_fields()
-        params['serviceDate'] = "something"
+        params['serviceDate'] = {"end":"some date", "start":"start date"}
 
         input_schema = SeasonalServiceInputSchema(params)
         assert input_schema
