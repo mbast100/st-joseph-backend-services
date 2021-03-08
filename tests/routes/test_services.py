@@ -10,8 +10,13 @@ class TestServices():
         pass
 
     def test_get_request(self):
-        self.client.core("GET")
-        assert len(self.client.json_response) > 5
+        resp = self.client.core("GET")
+
+        assert resp.status_code == 200
+        print(resp.json)
+        assert len(self.client.json_response) > 4
+        
+
 
     def test_get_request_with_query_attribute(self):
         self.client.core(

@@ -56,7 +56,8 @@ class TestSeasonalServices():
         assert service.save
 
     def test_get_seasonal_service(self):
-        service = Services().find_by("name", "Test Seasonal Service")
+        service = Services().find_by("name", "Seasonal Service Test")
+        print("service ", service)
         assert len(service) == 1
 
     def test_cant_save_without_params(self):
